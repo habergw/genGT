@@ -1,0 +1,5 @@
+useDynLib(genGT, .registration=TRUE)
+export(get_design)
+export(print.hdp)
+export(simulate_screening)
+importFrom(Rcpp, evalCpp)

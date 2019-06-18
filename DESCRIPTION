@@ -1,0 +1,16 @@
+Package: genGT
+Type: Package
+Title: Optimal algorithm for hierarchical generalized group testing
+        screening.
+Description: Performs computations for carrying out optimal algorithm for hierarchical group testing with homogenous
+    populations. This is often referred to as the generalized group testing problem.
+Version: 0.1
+Date: 2019-05-30
+Author: Gregory Haber and Yaakov Malinovsky
+Maintainer: Gregory Haber <habergw@nih.gov>
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.1)
+LinkingTo: Rcpp
+RoxygenNote: 6.1.1
+NeedsCompilation: yes
+Packaged: 2019-06-03 14:44:54 UTC; habergw
