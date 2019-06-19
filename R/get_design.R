@@ -69,11 +69,11 @@ get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL,
     # Only allow Monte Carlo if at least one of Se or Sp < 1
     if (Se == 1 & Sp == 1)
         monte_carlo <- FALSE
-    
+
     # Order by prevalence
     q <- 1 - p
     q_ordered <- sort(q, decreasing = TRUE)
-    indices <- order(q, decreasing = TRUE)  # store original indices to undo sort
+    indices <- rank(p)  # store original indices to undo sort
 
     # Get HDP algorithm results
     if (monte_carlo)
@@ -95,7 +95,7 @@ get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL,
 
     # Create data frame to hold results
     initial_design <- data.frame(id = id, p = p, order = indices, 
-                                 group = hdp$D[order(indices)])
+                                 group = hdp$D[indices])
 
     names(initial_design)[1:2] <- c(id_var, p_var)
 
