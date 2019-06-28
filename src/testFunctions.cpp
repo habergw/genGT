@@ -29,13 +29,12 @@ vector<int> get_test_val(int ind1, int ind2, vector<int> x, double Se,
             break;
         }
     }
-
+    
     if (val == 1) {
         res[0] = R::runif(0, 1) < Se;
     } else {
         res[0] = R::runif(0, 1) > Sp;
     }
-    
     *T += 1;
 
     return res;
@@ -58,6 +57,7 @@ vector<int> testH(int ind1, int ind2, vector<int> x, double Se, double Sp,
                     int *T, NumericMatrix h)
 {
     if (ind1 == ind2) {
+      // Rcout << "testH: " << ind1 << ", " << ind2 << endl;
         return get_test_val(ind1, ind2, x, Se, Sp, T);
     } 
 
@@ -89,13 +89,16 @@ vector<int> testh(int ind1, int ind2, vector<int> x,  double Se, double Sp,
     int ind_max = ind2;           // Maximum index for this function call
     ind2 = ind1 + h(ind1, ind2) - 1;
     vector<int> res, tmp2;
-
+    // Rcout << ind1 << ", " << ind2 << endl;
     while(1) {
         vector<int> test = get_test_val(ind1, ind2, x, Se, Sp, T);
         if (test[0] == 0) {
             vector<int> tmp(ind2 - ind1 + 1, 0);
             res.insert(res.end(), tmp.begin(), tmp.end());
             ind1 = ind2 + 1;
+            if (ind2 == ind_max) {
+              return res;
+            }
             if (ind1 == ind_max) {
                 res.push_back(1);
                 return res;
@@ -113,8 +116,6 @@ vector<int> testh(int ind1, int ind2, vector<int> x,  double Se, double Sp,
                 res.insert(res.end(), tmp2.begin(), tmp2.end());
                 tmp2 = testH(ind2 + 1, ind_max, x, Se, Sp, T, h);
                 res.insert(res.end(), tmp2.begin(), tmp2.end());
-               // return res;
-                // Should be able to return res here, test this
             }
             break;
         }
@@ -140,6 +141,7 @@ list<group> initialize_groups(NumericVector D) {
     while(i < N) {
         ind1 = i;
         ind2 = i + D[i] - 1;
+        // Rcout << ind1 << ", " << ind2 << endl;
         tmp.ind1 = ind1;
         tmp.ind2 = ind2;
         groups.push_back(tmp);

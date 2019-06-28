@@ -29,3 +29,7 @@ sim_screen <- function(y, q, Se, Sp) {
     .Call('_genGT_sim_screen', PACKAGE = 'genGT', y, q, Se, Sp)
 }
 
+testSp <- function(y, q, Se, Sp) {
+    .Call('_genGT_testSp', PACKAGE = 'genGT', y, q, Se, Sp)
+}
+

@@ -46,11 +46,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// testSp
+NumericVector testSp(NumericVector y, NumericVector q, double Se, double Sp);
+RcppExport SEXP _genGT_testSp(SEXP ySEXP, SEXP qSEXP, SEXP SeSEXP, SEXP SpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
+    Rcpp::traits::input_parameter< double >::type Se(SeSEXP);
+    Rcpp::traits::input_parameter< double >::type Sp(SpSEXP);
+    rcpp_result_gen = Rcpp::wrap(testSp(y, q, Se, Sp));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_genGT_return_hdp_mc", (DL_FUNC) &_genGT_return_hdp_mc, 4},
     {"_genGT_return_hdp", (DL_FUNC) &_genGT_return_hdp, 3},
     {"_genGT_sim_screen", (DL_FUNC) &_genGT_sim_screen, 4},
+    {"_genGT_testSp", (DL_FUNC) &_genGT_testSp, 4},
     {NULL, NULL, 0}
 };
 

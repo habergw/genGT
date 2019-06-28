@@ -1,11 +1,22 @@
 ################################################################################
 #
-# File: 
+# File: simulate_screening.R
 # Author: Gregory Haber (habergw@nih.gov)
-# Description:
-# History:
+# Description: Function to simulate screening process for given dataset.
+# History: Updated 06/19/19
 #
 ################################################################################
+#' @title simulate_screening
+#'
+#' Simulates screening process for given dataset.
+#'
+#' @param x Vector of individual statuses (binary).
+#' @param p Vector of individual prevalence estimates.
+#' @param Se Assay sensitivity.
+#' @param Sp Assay specificity.
+#'
+#' @return List given screening results, number of tests required, overall
+#'   sample sensitivity, and overall sample specificity.
 #' @export
 simulate_screening <- function(x, p, Se, Sp) {
     q <- 1 - p

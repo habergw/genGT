@@ -58,7 +58,7 @@ List get_hdp(NumericVector q, double Se, double Sp)
     // Dynamic programming algorithm
     for (int n = N - 2; n >= 0; n--) {
       H(n) = 1 + H(n + 1) + get_prob(pi_mat(n, n), Se, Sp) * h(n, n);
-        D(n) = 1;
+      D(n) = 1;
 
         for (int k = 1; k < N - n; k++) {
           for (int x = 0; x < k; x++) {

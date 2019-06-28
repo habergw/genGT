@@ -26,7 +26,7 @@ List return_hdp_mc(NumericVector q, double Se, double Sp, int M)
     mc_data vals = mc_sims(D, d, q, Se, Sp, M);
 
     D = get_labels(D);
-
+    Rcout << H << endl;
     return List::create(_["D"] = D, _["Se"] = vals.Se_overall,
                         _["Sp"] = vals.Sp_overall,
                         _["ET"] = vals.ET,
@@ -105,4 +105,17 @@ List sim_screen(NumericVector y, NumericVector q, double Se, double Sp)
                         _["Se"] = ESe,
                         _["Sp"] = ESp,
                         _["T"] = values.T);
+}
+
+// [[Rcpp::export]]
+NumericVector testSp(NumericVector y, NumericVector q, double Se, double Sp)
+{
+  vector<int> x = as<vector<int> > (y);
+  int ind1 = 0;
+  int ind2 = x.size() - 1;
+  int T = 0;
+
+  vector<int> z = get_test_val(ind1, ind2, x, Se, Sp, &T);
+
+  return wrap(z);
 }
