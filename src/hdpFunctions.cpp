@@ -57,52 +57,52 @@ List get_hdp(NumericVector q, double Se, double Sp)
 
     // Dynamic programming algorithm
     for (int n = N - 2; n >= 0; n--) {
-      H(n) = 1 + H(n + 1) + get_prob(pi_mat(n, n), Se, Sp) * h(n, n);
+      H(n) = 1 + H(n + 1);
       D(n) = 1;
 
-        for (int k = 1; k < N - n; k++) {
-          for (int x = 0; x < k; x++) {
-            T_0 = 1 + h(n + x + 1, n + k);
-            T_10 = 2 + h(n, n + x);
-            T_11 = 2 + h(n, n + x) + h(n + x + 1, n + k);
-            prod_a = pi_mat(n, n + x);
-            prod_b = pi_mat(n + x + 1, n + k);
-            prod_ab = pi_mat(n, n + k);
-            P_0 = Se * (1 - Se) + prod_a *
-                   (Sp * Se - Se * (1 - Se)) +
-              prod_ab * Sp * (1 - Sp - Se);
-            P_10 = Se * Se * (1 - Se) + prod_a *
-                    Se * (1 - Se) * (1 - Se - Sp) +
-                     prod_b * Se * Se * (Sp + Se - 1) +
-              prod_ab * (Se * (1 - Se) * (Se + Sp - 1) +
-                                          Sp * (1 - Sp) * (1 - Sp) - Se * Se * Sp);
-            P_11 = Se * Se * Se + prod_a * Se * Se * (1 - Sp - Se) +
-              prod_b * Se * Se * (1 - Se - Sp) +
-              prod_ab * (pow(1 - Sp, 3) - 2 * Se * Se * (1 - Sp) +
-                                          pow(Se, 3));
+      for (int k = 1; k < N - n; k++) {
+        for (int x = 0; x < k; x++) {
+          T_0 = 1 + h(n + x + 1, n + k);
+          T_10 = 2 + h(n, n + x);
+          T_11 = 2 + h(n, n + x) + h(n + x + 1, n + k);
+          prod_a = pi_mat(n, n + x);
+          prod_b = pi_mat(n + x + 1, n + k);
+          prod_ab = pi_mat(n, n + k);
+          P_0 = Se * (1 - Se) + prod_a *
+                 (Sp * Se - Se * (1 - Se)) +
+            prod_ab * Sp * (1 - Sp - Se);
+          P_10 = Se * Se * (1 - Se) + prod_a *
+                  Se * (1 - Se) * (1 - Se - Sp) +
+                   prod_b * Se * Se * (Sp + Se - 1) +
+            prod_ab * (Se * (1 - Se) * (Se + Sp - 1) +
+                                        Sp * (1 - Sp) * (1 - Sp) - Se * Se * Sp);
+          P_11 = Se * Se * Se + prod_a * Se * Se * (1 - Sp - Se) +
+            prod_b * Se * Se * (1 - Se - Sp) +
+            prod_ab * (pow(1 - Sp, 3) - 2 * Se * Se * (1 - Sp) +
+                                        pow(Se, 3));
 
-            tmp1 = T_0 * P_0 + T_10 * P_10 + T_11 * P_11;
-            
-            tmp1 /= get_prob(pi_mat(n, n + k), Se, Sp);
-            if (x == 0) {
-              h(n, n + k) = tmp1;
-              d(n, n + k) = x + 1;
-            } else if (tmp1 < h(n, n + k)) {
-              h(n, n + k) = tmp1;
-              d(n, n + k) = x + 1;
-            }
-          }
-          tmp2 = 1 + H(n + k + 1) + get_prob(pi_mat(n, n + k), Se, Sp) *
-            h(n, n + k);
-
-          if (tmp2 < H(n)) {
-            H(n) = tmp2;
-            D(n) = k + 1;
+          tmp1 = T_0 * P_0 + T_10 * P_10 + T_11 * P_11;
+          
+          tmp1 /= get_prob(pi_mat(n, n + k), Se, Sp);
+          if (x == 0) {
+            h(n, n + k) = tmp1;
+            d(n, n + k) = x + 1;
+          } else if (tmp1 < h(n, n + k)) {
+            h(n, n + k) = tmp1;
+            d(n, n + k) = x + 1;
           }
         }
+        tmp2 = 1 + H(n + k + 1) + get_prob(pi_mat(n, n + k), Se, Sp) *
+          h(n, n + k);
+
+        if (tmp2 < H(n)) {
+          H(n) = tmp2;
+          D(n) = k + 1;
+        }
+      }
     }
 
-            return List::create(h, d, H, D);
+    return List::create(h, d, H, D);
 }
 
 /**

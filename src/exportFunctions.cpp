@@ -26,10 +26,11 @@ List return_hdp_mc(NumericVector q, double Se, double Sp, int M)
     mc_data vals = mc_sims(D, d, q, Se, Sp, M);
 
     D = get_labels(D);
-    Rcout << H << endl;
-    return List::create(_["D"] = D, _["Se"] = vals.Se_overall,
+    Rcout << H[0] << endl;
+    return List::create(_["D"] = D,
+                        _["ET"] = H(0),
+                        _["Se"] = vals.Se_overall,
                         _["Sp"] = vals.Sp_overall,
-                        _["ET"] = vals.ET,
                         _["h"] = h,
                         _["d"] = d);
 }
@@ -52,7 +53,7 @@ List return_hdp(NumericVector q, double Se, double Sp)
     NumericVector h = hdp[0];
 
     D = get_labels(D);
-
+    
     return List::create(_["D"] = D, 
                         _["ET"] = H(0),
                         _["h"] = h,

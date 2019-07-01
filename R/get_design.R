@@ -23,8 +23,8 @@
 #' @param Se Assay sensitivity; assumed constant across group sizes.
 #' @param Sp Assay specificity; assumed constant across group sizes.
 #' @param monte_carlo A logical value indicating whether Monte Carlo methods
-#'                    should be used to estimate overall sensitivity, overall
-#'                    specificity, and total number of tests.
+#'                    should be used to estimate overall sensitivity and overall
+#'                    specificity..
 #' @param M Number of Monte Carlo iterations.
 #' @return Returns a list with several design elements. 
 #'   1. A data frame containing, for each member of the population, an id
@@ -123,36 +123,4 @@ get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL,
 #' @export
 print.hdp <- function(x) {
     print(x$initial_design)
-}
-
-
-test_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL, 
-                       Se = 1, Sp = 1, monte_carlo = TRUE, M = 10000) {
-    # Check and assign variables
-    if (is.null(p) & is.null(df))
-        stop("One of p or df must be provided.")
-
- if (is.null(p)) {
-        p_var <- as.character(substitute(p_var))
-        id_var <- as.character(substitute(id_var))
-
-        if (length(id_var) == 0 | length(p_var) == 0)
-            stop("If using df, both id_var and p_var must be specified.")
-
-        p <- eval(parse(text = p_var), envir = df)
-        id <- eval(parse(text = id_var), envir = df)
-    } else {
-        id <- NULL
-    }
-
-    # Only allow Monte Carlo if at least one of Se or Sp < 1
-
-    # Order by prevalence
-    q <- 1 - p
-    q_ordered <- sort(q, decreasing = TRUE)
-    indices <- rank(p)  # store original indices to undo sort
-
-    # Get HDP algorithm results
-        hdp <- return_hdp_mc(q_ordered, Se, Sp, M)
-hdp$ET
 }

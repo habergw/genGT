@@ -36,7 +36,7 @@ vector<int> get_test_val(int ind1, int ind2, vector<int> x, double Se,
         res[0] = R::runif(0, 1) > Sp;
     }
     *T += 1;
-
+    
     return res;
 }
 
@@ -57,7 +57,6 @@ vector<int> testH(int ind1, int ind2, vector<int> x, double Se, double Sp,
                     int *T, NumericMatrix h)
 {
     if (ind1 == ind2) {
-      // Rcout << "testH: " << ind1 << ", " << ind2 << endl;
         return get_test_val(ind1, ind2, x, Se, Sp, T);
     } 
 
@@ -77,7 +76,7 @@ vector<int> testH(int ind1, int ind2, vector<int> x, double Se, double Sp,
  * @param ind2 (int): population index of last group member.
  * @param x (vector<int>): vector of outcomes from ordered population.
  * @param Se (double): assay sensitivity.
- * @oaram Sp (double): assay specificity.
+ * @param Sp (double): assay specificity.
  * @param T (*int): pointer to variable storing total number of tests.
  * @param h (Rcpp::NumericMatrix): next stage group sizes for defective groups.
  *
@@ -86,41 +85,37 @@ vector<int> testH(int ind1, int ind2, vector<int> x, double Se, double Sp,
 vector<int> testh(int ind1, int ind2, vector<int> x,  double Se, double Sp,
                     int *T, NumericMatrix h)
 {
+    vector<int> res, tmp2;
+
+    // If only one element was tested, return single positive value
+    if (ind1 == ind2) {
+      res.push_back(1);
+      return res;
+    }
+    
     int ind_max = ind2;           // Maximum index for this function call
     ind2 = ind1 + h(ind1, ind2) - 1;
-    vector<int> res, tmp2;
-    // Rcout << ind1 << ", " << ind2 << endl;
-    while(1) {
-        vector<int> test = get_test_val(ind1, ind2, x, Se, Sp, T);
-        if (test[0] == 0) {
-            vector<int> tmp(ind2 - ind1 + 1, 0);
-            res.insert(res.end(), tmp.begin(), tmp.end());
-            ind1 = ind2 + 1;
-            if (ind2 == ind_max) {
-              return res;
-            }
-            if (ind1 == ind_max) {
-                res.push_back(1);
-                return res;
-            }
-           ind2 = ind1 + h(ind1, ind_max) - 1;
+    vector<int> test = get_test_val(ind1, ind2, x, Se, Sp, T);
+    
+    if (test[0] == 0) {
+        vector<int> tmp(ind2 - ind1 + 1, 0);
+        res.insert(res.end(), tmp.begin(), tmp.end());
 
-        } else {
-            if (ind1 == ind2) {
-                res.push_back(1);
-                tmp2 = testH(ind2 + 1, ind_max, x, Se, Sp, T, h);
-                res.insert(res.end(), tmp2.begin(), tmp2.end());
-                return res;
-            } else {
-                tmp2 = testh(ind1, ind2, x, Se, Sp, T, h); 
-                res.insert(res.end(), tmp2.begin(), tmp2.end());
-                tmp2 = testH(ind2 + 1, ind_max, x, Se, Sp, T, h);
-                res.insert(res.end(), tmp2.begin(), tmp2.end());
-            }
-            break;
+        if (ind2 + 1 == ind_max) {
+            res.push_back(1);
+            return res;
         }
+
+        tmp2 = testh(ind2 + 1, ind_max, x, Se, Sp, T, h);
+        res.insert(res.end(), tmp2.begin(), tmp2.end());
+        return res;
+    } else {
+        tmp2 = testh(ind1, ind2, x, Se, Sp, T, h); 
+        res.insert(res.end(), tmp2.begin(), tmp2.end());
+        tmp2 = testH(ind2 + 1, ind_max, x, Se, Sp, T, h);
+        res.insert(res.end(), tmp2.begin(), tmp2.end());
+        return res;
     }
-    return res;
 }
 
 /**
@@ -141,7 +136,6 @@ list<group> initialize_groups(NumericVector D) {
     while(i < N) {
         ind1 = i;
         ind2 = i + D[i] - 1;
-        // Rcout << ind1 << ", " << ind2 << endl;
         tmp.ind1 = ind1;
         tmp.ind2 = ind2;
         groups.push_back(tmp);
@@ -185,7 +179,7 @@ sim_vals sim_iter(NumericVector q, list<group> initial_groups, NumericMatrix h,
     for (int i = 0; i < N; i++) {
         x[i] = R::runif(0, 1) > q(i);
     }
-    
+
     auto it = initial_groups.begin();
 
     for (int i = 0; i < s; i++) {
