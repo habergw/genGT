@@ -1,3 +1,6 @@
+
+# Overview
+
 This package can be used to facilitate screening of large populations
 using pooled tested when members of a population belong to different
 risk sets for a given outcome. Specifically, it implements an optimal
@@ -6,14 +9,25 @@ algorithm can incorporate assay missclassification with the assumption
 that such errors are non-differential. In this document, we will explain
 the basic usage of the main functions provided by the package.
 
-Simulated data
-==============
+# Installation
+
+The package can be installed using the following commands. If `devtools`
+is already installed, the first command can be skipped.
+
+``` r
+install.packages("devtools")
+devtools::install_github("habergw/genGT")
+```
+
+# Simulated data
 
 First, we simulate a dataset to be used for screening with 20
 individuals. This will contain two variables
 
-1.  **id**: unique identifier for each population member.
-2.  **p**: prevalence of infection for each population member.
+1.  `id`: unique identifier for each population member.
+2.  `p`: prevalence of infection for each population member.
+
+<!-- end list -->
 
 ``` r
 library(genGT)
@@ -45,39 +59,38 @@ data
     ## 19 19 0.38003518
     ## 20 20 0.77744522
 
-Initial study design
-====================
+# Initial study design
 
 To carry out screening, we must determine how the population members
 will be grouped for the first stage of testing. To do this, we use the
-**get\_design** function with our simulated data. Data can be passed to
-get\_design in one of two ways: 1) as a data frame type object
+`get_design()` function with our simulated data. Data can be passed to
+`get_design()` in one of two ways: i) as a data frame type object
 containing prevalence estimates, an identifier variable, and possibly
-other variables or 2) as a single vector of estimated prevalences. This
+other variables or ) as a single vector of estimated prevalences. This
 information is provided to the function using the following variables:
 
-1.  **p**: (using method 2 above) single vector of prevalences.
-2.  **df**: (using method 1 above) data.frame or similar object type
-3.  **id\_var**: (using method 1 above) name of id variable in
-    dataframe.
-4.  **p\_var**: (using method 1 above) name of prevalence variable in
-    data frame.
+1.  `p`: (using method ii above) Single vector of prevalences.
+2.  `df`: (using method i above) data.frame or similar object type
+3.  `id_var`: (using method i above) Name of id variable in dataframe.
+4.  `p_var`: (using method i above) Name of prevalence variable in data
+    frame.
 
 In addition to data information, the following variables can be passed
-to **get\_design**:
+to `get_design()`:
 
-1.  **Se**: Sensitivity of assay to be used for screening.
-2.  **Sp**: Specificity of assay to be used for screening.
-3.  **monte\_carlo** (boolean): Should Monte Carlo methods be used to
+1.  `Se`: Sensitivity of assay to be used for screening.
+2.  `Sp`: Specificity of assay to be used for screening.
+3.  `monte_carlo` (boolean): Should Monte Carlo methods be used to
     estimate the overall testing sensitivity and specificity? (Defaults
     to TRUE.)
-4.  **M**: If using Monte Carlo methods, how many iterations should be
+4.  `M`: If using Monte Carlo methods, how many iterations should be
     carried out? (Defaults to 10,000.)
 
 For this example, we will assume Se = Sp = 0.95 and leave the other
 arguments at their defaults.
 
-We now call the function to get the initial design information.
+We now call the function to get the initial design
+information.
 
 ``` r
 design <- get_design(df = data, id_var = id, p_var = p, Se = 0.95, Sp = 0.95)
@@ -86,18 +99,18 @@ design <- get_design(df = data, id_var = id, p_var = p, Se = 0.95, Sp = 0.95)
 Printing the design object shows a data frame with the following
 variables:
 
-1.  **id**: This is the identifier variable passed to **id\_var**.
-    (Note: the name will be the same as **id\_var** if provided.)
-2.  **p**: Prevalence estimates. (Note: the name will be the same as
-    **p\_var** if provided.)
-3.  **order**: The rank of the individual in terms of prevalence
-    estimate, from smallest to largest. This will be useful in
-    determining subsequent stage groups.
-4.  **group**: Initial group assignment for each individual (i.e., all
+1.  `id`: This is the identifier variable passed to `id_var`. (Note: the
+    name will be the same as `id_var` if provided.)
+2.  `p`: Prevalence estimates. (Note: the name will be the same as
+    `p_var` if provided.)
+3.  `order`: The rank of the individual in terms of prevalence estimate,
+    from smallest to largest. This will be useful in determining
+    subsequent stage groups.
+4.  `group`: Initial group assignment for each individual (i.e., all
     those lablled 1 should be tested together, etc.)
 
 Note: This same data frame can be accessed using
-**design$initial\_design**.
+`design$initial_design`.
 
 ``` r
 design
@@ -125,21 +138,18 @@ design
     ## 19 19 0.38003518     7     3
     ## 20 20 0.77744522    16    11
 
-Additional design information
------------------------------
+## Additional design information
 
-In addition to the design data frame described above, the
-**get\_design** function returns additional design related variables as
-follows:
+In addition to the design data frame described above, the `get_design()`
+function returns additional design related variables as follows:
 
-1.  **ET**: Expected number of tests for carrying out screening.
-2.  **Se**: Expected overall sensitivity (only returned if
-    **monte\_carlo = TRUE**).
-3.  **Sp**: Expected overall specificity (only returned if
-    **monte\_carlo = TRUE**).
+1.  `ET`: Expected number of tests for carrying out screening.
+2.  `Se`: Expected overall sensitivity (only returned if `monte_carlo =
+    TRUE`).
+3.  `Sp`: Expected overall specificity (only returned if `monte_carlo =
+    TRUE`).
 
-Subsequent stages
-=================
+# Subsequent stages
 
 Once the initial group sizes have been determined, each group can be
 tested simultaneously. If a test is negative, all individuals comprising
@@ -148,7 +158,7 @@ one member, we must determine how to further divide the given group for
 subsequent testing.
 
 To facilitate this, the original design object is returned with a
-function **get\_next\_group** which, when given the ranks of the
+function `get_next_group()` which, when given the ranks of the
 individuals in a group with the smallest and largest estimated
 prevalences, will return a data frame listing the subgroup to be tested
 in the following stage.
