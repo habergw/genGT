@@ -31,7 +31,7 @@ create_next_stage_func <- function(d, initial_design, id_var, p_var) {
 
     get_next_group <- function(index_1, index_2) {
         group_indices <- seq(index_1, index_1 + d[index_1, index_2] - 1)
-        initial_design[initial_design$Order %in% group_indices, 
-                       c(id_var, p_var, "Order")]
+        initial_design[initial_design$order %in% group_indices, 
+                       c(id_var, p_var, "order")]
     }
 }

@@ -26,7 +26,7 @@ List return_hdp_mc(NumericVector q, double Se, double Sp, int M)
     mc_data vals = mc_sims(D, d, q, Se, Sp, M);
 
     D = get_labels(D);
-    Rcout << H[0] << endl;
+
     return List::create(_["D"] = D,
                         _["ET"] = H(0),
                         _["Se"] = vals.Se_overall,
@@ -61,11 +61,18 @@ List return_hdp(NumericVector q, double Se, double Sp)
 }
 
 // [[Rcpp::export]]
-List sim_screen(NumericVector y, NumericVector q, double Se, double Sp)
+List sim_screen(NumericVector y, NumericVector q, double Se, double Sp,
+                bool no_mc)
 {
-
-    List hdp = get_hdp(q, Se, Sp);
+  List hdp;
+  if (no_mc) {  
+    hdp = get_hdp(q, 1, 1);
+  } else {
+    hdp = get_hdp(q, Se, Sp);
+  }
+  
     NumericVector D = hdp[3];
+    NumericVector H = hdp[2];
     NumericMatrix h = hdp[1];
 
     vector<int> x = as<vector<int> >(y);
@@ -99,24 +106,15 @@ List sim_screen(NumericVector y, NumericVector q, double Se, double Sp)
     values.true_1 = accumulate(x.begin(), x.end(), 0);
     values.true_0 = N - values.true_1;
  
-    ESe = values.est_1 / values.true_1;
-    ESp = values.est_0 / values.true_0;
+    ESe = (double) values.est_1 / values.true_1;
+    ESp = (double) values.est_0 / values.true_0;
+
+    D = get_labels(D);
 
     return List::create(_["x_hat"] = res,
+                        _["D"] = D,
                         _["Se"] = ESe,
                         _["Sp"] = ESp,
-                        _["T"] = values.T);
-}
-
-// [[Rcpp::export]]
-NumericVector testSp(NumericVector y, NumericVector q, double Se, double Sp)
-{
-  vector<int> x = as<vector<int> > (y);
-  int ind1 = 0;
-  int ind2 = x.size() - 1;
-  int T = 0;
-
-  vector<int> z = get_test_val(ind1, ind2, x, Se, Sp, &T);
-
-  return wrap(z);
+                        _["T"] = values.T,
+                        _["ET"] = H(0));
 }

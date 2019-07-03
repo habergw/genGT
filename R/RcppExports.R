@@ -25,11 +25,7 @@ return_hdp <- function(q, Se, Sp) {
     .Call('_genGT_return_hdp', PACKAGE = 'genGT', q, Se, Sp)
 }
 
-sim_screen <- function(y, q, Se, Sp) {
-    .Call('_genGT_sim_screen', PACKAGE = 'genGT', y, q, Se, Sp)
-}
-
-testSp <- function(y, q, Se, Sp) {
-    .Call('_genGT_testSp', PACKAGE = 'genGT', y, q, Se, Sp)
+sim_screen <- function(y, q, Se, Sp, no_mc) {
+    .Call('_genGT_sim_screen', PACKAGE = 'genGT', y, q, Se, Sp, no_mc)
 }
 

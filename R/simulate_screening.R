@@ -18,17 +18,18 @@
 #' @return List given screening results, number of tests required, overall
 #'   sample sensitivity, and overall sample specificity.
 #' @export
-simulate_screening <- function(x, p, Se, Sp) {
+simulate_screening <- function(x, p, Se, Sp, no_mc = TRUE) {
     q <- 1 - p
     q_ordered <- sort(q, decreasing = TRUE)
     q_order <- order(q, decreasing = TRUE)
-    
-    results <- sim_screen(x[q_order], q_ordered, Se, Sp)
+
+    results <- sim_screen(x[q_order], q_ordered, Se, Sp, no_mc)
     
     list(results = data.frame(x = x,
                               screen_result = results$x_hat[order(q_order)],
-                              p = p),
+                              p = p, groups = results$D[order(q_order)]),
          T = results$T,
+         ET = results$ET,
          Se = results$Se,
          Sp = results$Sp)
 }

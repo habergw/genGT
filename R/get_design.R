@@ -3,7 +3,7 @@
 # File: get_design.R
 # Author: Gregory Haber (habergw@nih.gov) and Yaakov Malinovsky
 # Description: Definition of get_design() function for genGT package.
-# History: Updated 05/30/19
+# History: Updated 07/01/19
 #
 ################################################################################
 
@@ -53,7 +53,7 @@ get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL,
     if (is.null(p) & is.null(df))
         stop("One of p or df must be provided.")
 
- if (is.null(p)) {
+    if (is.null(p)) {
         p_var <- as.character(substitute(p_var))
         id_var <- as.character(substitute(id_var))
 
@@ -73,7 +73,7 @@ get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL,
     # Order by prevalence
     q <- 1 - p
     q_ordered <- sort(q, decreasing = TRUE)
-    indices <- rank(p)  # store original indices to undo sort
+    indices <- rank(p, ties.method = "first")
 
     # Get HDP algorithm results
     if (monte_carlo)

@@ -84,6 +84,7 @@ List get_hdp(NumericVector q, double Se, double Sp)
           tmp1 = T_0 * P_0 + T_10 * P_10 + T_11 * P_11;
           
           tmp1 /= get_prob(pi_mat(n, n + k), Se, Sp);
+
           if (x == 0) {
             h(n, n + k) = tmp1;
             d(n, n + k) = x + 1;
@@ -92,9 +93,9 @@ List get_hdp(NumericVector q, double Se, double Sp)
             d(n, n + k) = x + 1;
           }
         }
+
         tmp2 = 1 + H(n + k + 1) + get_prob(pi_mat(n, n + k), Se, Sp) *
           h(n, n + k);
-
         if (tmp2 < H(n)) {
           H(n) = tmp2;
           D(n) = k + 1;
