@@ -29,6 +29,7 @@ List return_hdp_mc(NumericVector q, double Se, double Sp, int M)
 
     return List::create(_["D"] = D,
                         _["ET"] = H(0),
+                        _["ETmc"] = vals.ET,
                         _["Se"] = vals.Se_overall,
                         _["Sp"] = vals.Sp_overall,
                         _["h"] = h,

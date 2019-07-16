@@ -26,6 +26,8 @@
 #'                    should be used to estimate overall sensitivity and overall
 #'                    specificity..
 #' @param M Number of Monte Carlo iterations.
+#' @param no_mc_design A logical value indicating whether misclassifcation
+#'                     values should be ignored when constructing the design.
 #' @return Returns a list with several design elements. 
 #'   1. A data frame containing, for each member of the population, an id
 #'   value (this is the same as the orginal population id if provided),
@@ -48,7 +50,8 @@
 #'     list component).
 #' @export
 get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL, 
-                       Se = 1, Sp = 1, monte_carlo = TRUE, M = 10000) {
+                       Se = 1, Sp = 1, monte_carlo = TRUE, M = 10000,
+                       no_mc_design = T) {
     # Check and assign variables
     if (is.null(p) & is.null(df))
         stop("One of p or df must be provided.")
@@ -76,10 +79,19 @@ get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL,
     indices <- rank(p, ties.method = "first")
 
     # Get HDP algorithm results
-    if (monte_carlo)
+    if (monte_carlo & !no_mc_design)
         hdp <- return_hdp_mc(q_ordered, Se, Sp, M)
-    else
+    else if (monte_carlo)
+        hdp <- return_hdp_mc(q_ordered, Se = 1, Sp = 1, M)
+    else if (!no_mc_design)
         hdp <- return_hdp(q_ordered, Se, Sp)
+    else
+        hdp <- return_hdp(q_ordered, Se = 1, Sp = 1)
+
+    # If no misclassification is used in design, and testing error is present
+    # use estimated number of tests
+    if (no_mc_design & (Se != 1 | Sp != 1) & monte_carlo)
+        hdp$ET <- hdp$ETmc
 
     # Assign numeric value to missing id 
     if(is.null(id)) {
