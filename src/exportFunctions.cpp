@@ -14,10 +14,16 @@ using namespace std;
 //' @param Sp (double): assay specificity.
 //' @param M  (int): number of Monte Carlo iterations
 // [[Rcpp::export]]
-List return_hdp_mc(NumericVector q, double Se, double Sp, int M) 
+List return_hdp_mc(NumericVector q, double Se, double Sp, int M,
+                   bool no_mc_design) 
 {
-    List hdp = get_hdp(q, Se, Sp);
-
+    List hdp;
+    if (no_mc_design) {
+        hdp = get_hdp(q, 1, 1);
+    } else {
+        hdp = get_hdp(q, Se, Sp);
+    }    
+    
     NumericVector D = hdp[3];
     NumericMatrix d = hdp[1];
     NumericVector H = hdp[2];
@@ -44,9 +50,15 @@ List return_hdp_mc(NumericVector q, double Se, double Sp, int M)
 //' @param Se (double): assay sensitivity.
 //' @param Sp (double): assay specificity.
 // [[Rcpp::export]]
-List return_hdp(NumericVector q, double Se, double Sp) 
+List return_hdp(NumericVector q, double Se, double Sp,
+                bool no_mc_design) 
 {
-    List hdp = get_hdp(q, Se, Sp);
+    List hdp;
+    if (no_mc_design) {
+        hdp = get_hdp(q, 1, 1);
+    } else {
+        hdp = get_hdp(q, Se, Sp);
+    }
 
     NumericVector D = hdp[3];
     NumericMatrix d = hdp[1];

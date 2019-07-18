@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // return_hdp_mc
-List return_hdp_mc(NumericVector q, double Se, double Sp, int M);
-RcppExport SEXP _genGT_return_hdp_mc(SEXP qSEXP, SEXP SeSEXP, SEXP SpSEXP, SEXP MSEXP) {
+List return_hdp_mc(NumericVector q, double Se, double Sp, int M, bool no_mc_design);
+RcppExport SEXP _genGT_return_hdp_mc(SEXP qSEXP, SEXP SeSEXP, SEXP SpSEXP, SEXP MSEXP, SEXP no_mc_designSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -15,20 +15,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Se(SeSEXP);
     Rcpp::traits::input_parameter< double >::type Sp(SpSEXP);
     Rcpp::traits::input_parameter< int >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(return_hdp_mc(q, Se, Sp, M));
+    Rcpp::traits::input_parameter< bool >::type no_mc_design(no_mc_designSEXP);
+    rcpp_result_gen = Rcpp::wrap(return_hdp_mc(q, Se, Sp, M, no_mc_design));
     return rcpp_result_gen;
 END_RCPP
 }
 // return_hdp
-List return_hdp(NumericVector q, double Se, double Sp);
-RcppExport SEXP _genGT_return_hdp(SEXP qSEXP, SEXP SeSEXP, SEXP SpSEXP) {
+List return_hdp(NumericVector q, double Se, double Sp, bool no_mc_design);
+RcppExport SEXP _genGT_return_hdp(SEXP qSEXP, SEXP SeSEXP, SEXP SpSEXP, SEXP no_mc_designSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
     Rcpp::traits::input_parameter< double >::type Se(SeSEXP);
     Rcpp::traits::input_parameter< double >::type Sp(SpSEXP);
-    rcpp_result_gen = Rcpp::wrap(return_hdp(q, Se, Sp));
+    Rcpp::traits::input_parameter< bool >::type no_mc_design(no_mc_designSEXP);
+    rcpp_result_gen = Rcpp::wrap(return_hdp(q, Se, Sp, no_mc_design));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -49,8 +51,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_genGT_return_hdp_mc", (DL_FUNC) &_genGT_return_hdp_mc, 4},
-    {"_genGT_return_hdp", (DL_FUNC) &_genGT_return_hdp, 3},
+    {"_genGT_return_hdp_mc", (DL_FUNC) &_genGT_return_hdp_mc, 5},
+    {"_genGT_return_hdp", (DL_FUNC) &_genGT_return_hdp, 4},
     {"_genGT_sim_screen", (DL_FUNC) &_genGT_sim_screen, 5},
     {NULL, NULL, 0}
 };

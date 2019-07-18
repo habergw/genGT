@@ -10,8 +10,8 @@
 #' @param Se (double): assay sensitivity.
 #' @param Sp (double): assay specificity.
 #' @param M  (int): number of Monte Carlo iterations
-return_hdp_mc <- function(q, Se, Sp, M) {
-    .Call('_genGT_return_hdp_mc', PACKAGE = 'genGT', q, Se, Sp, M)
+return_hdp_mc <- function(q, Se, Sp, M, no_mc_design) {
+    .Call('_genGT_return_hdp_mc', PACKAGE = 'genGT', q, Se, Sp, M, no_mc_design)
 }
 
 #' @title return_hdp
@@ -21,8 +21,8 @@ return_hdp_mc <- function(q, Se, Sp, M) {
 #' @param q (Rcpp::NumericVector): ordered vector of individual prevalences.
 #' @param Se (double): assay sensitivity.
 #' @param Sp (double): assay specificity.
-return_hdp <- function(q, Se, Sp) {
-    .Call('_genGT_return_hdp', PACKAGE = 'genGT', q, Se, Sp)
+return_hdp <- function(q, Se, Sp, no_mc_design) {
+    .Call('_genGT_return_hdp', PACKAGE = 'genGT', q, Se, Sp, no_mc_design)
 }
 
 sim_screen <- function(y, q, Se, Sp, no_mc) {

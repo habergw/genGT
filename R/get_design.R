@@ -79,14 +79,11 @@ get_design <- function(p = NULL, df = NULL, id_var = NULL, p_var = NULL,
     indices <- rank(p, ties.method = "first")
 
     # Get HDP algorithm results
-    if (monte_carlo & !no_mc_design)
-        hdp <- return_hdp_mc(q_ordered, Se, Sp, M)
-    else if (monte_carlo)
-        hdp <- return_hdp_mc(q_ordered, Se = 1, Sp = 1, M)
-    else if (!no_mc_design)
-        hdp <- return_hdp(q_ordered, Se, Sp)
-    else
-        hdp <- return_hdp(q_ordered, Se = 1, Sp = 1)
+    if (monte_carlo) {
+        hdp <- return_hdp_mc(q_ordered, Se, Sp, M, no_mc_design)
+    } else {
+        hdp <- return_hdp(q_ordered, Se, Sp, no_mc_design)
+    }
 
     # If no misclassification is used in design, and testing error is present
     # use estimated number of tests
