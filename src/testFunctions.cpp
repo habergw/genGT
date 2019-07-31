@@ -4,6 +4,8 @@
 using namespace Rcpp;
 using namespace std;
 
+// [[Rcpp::plugins(cpp11)]]
+
 /**
  * get_test_val() carries out binomial test for a given group with indicated
  * misclassification values. Mostly useful for simulations.
