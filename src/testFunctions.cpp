@@ -182,7 +182,7 @@ sim_vals sim_iter(NumericVector q, list<group> initial_groups, NumericMatrix h,
         x[i] = R::runif(0, 1) > q(i);
     }
 
-    auto it = initial_groups.begin();
+    list<group>::iterator it = initial_groups.begin();
 
     for (int i = 0; i < s; i++) {
         tmp = testH(it->ind1, it->ind2, x, Se, Sp, &values.T, h);
@@ -232,7 +232,7 @@ mc_data mc_sims(NumericVector D, NumericMatrix h, NumericVector q,
         sim_list.push_back(tmp);
     }
 
-    auto sim_list_iter = sim_list.begin();
+    list<sim_vals>::iterator sim_list_iter = sim_list.begin();
 
     for (int i = 0; i < M; i++) {
         true_0 += sim_list_iter->true_0;
