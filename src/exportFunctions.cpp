@@ -100,7 +100,7 @@ List sim_screen(NumericVector y, NumericVector q, double Se, double Sp,
     vector<int> tmp;
     double ESe, ESp;
     
-    auto it = initial_groups.begin();
+    list<group>::iterator it = initial_groups.begin();
 
     for (int i = 0; i < s; i++) {
         tmp = testH(it->ind1, it->ind2, x, Se, Sp, &values.T, h);
